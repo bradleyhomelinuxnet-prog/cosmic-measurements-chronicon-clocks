@@ -235,10 +235,11 @@
   function checksTable() {
     var rows = CC.petrie.checks.map(function (c) {
       var v = c.expr(F), dev = (v - c.target) / c.target * 100, ad = Math.abs(dev);
-      var verdict = ad < 0.01 ? ['hold', 'holds'] : ad < 0.5 ? ['near', 'close'] : ['miss', 'does not hold'];
+      var atPlaces = c.places != null && core.round(v, c.places) === core.round(c.target, c.places);
+      var verdict = atPlaces ? ['hold', 'holds to ' + c.places + ' places'] : ad < 0.01 ? ['hold', 'holds'] : ad < 0.5 ? ['near', 'close'] : ['miss', 'does not hold'];
       var sec = A.sectionById(c.section);
       return '<tr><td>' + A.esc(c.name) + (sec ? '<div class="muted" style="font-size:13px"><a href="#book/' + sec.id + '">' + A.esc(A.sectionName(sec.id)) + '</a></div>' : '') + '</td>' +
-        '<td class="num">' + n(v, 5) + '</td><td class="num">' + A.esc(c.targetLabel) + (c.target !== Math.round(c.target) ? ' = ' + n(c.target, 5) : '') + '</td>' +
+        '<td class="num">' + n(v, c.places != null ? c.places : 5) + '</td><td class="num">' + A.esc(c.targetLabel) + (c.target !== Math.round(c.target) ? ' = ' + n(c.target, 5) : '') + '</td>' +
         '<td class="num">' + A.esc(c.claim || '—') + '</td><td class="num">' + (dev >= 0 ? '+' : '') + n(dev, 3) + '%</td>' +
         '<td><span class="verdict ' + verdict[0] + '">' + verdict[1] + '</span></td></tr>';
     }).join('');

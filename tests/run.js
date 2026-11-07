@@ -107,7 +107,8 @@ test('feature ids are unique and every feature has a source', () => {
 test('the four sides average to the mean side', () => near((F['base-north'] + F['base-south'] + F['base-east'] + F['base-west']) / 4, F['base-mean'], 0.05));
 test('the checks compute the true values', () => {
   const C = {}; P.checks.forEach(c => { C[c.id] = c.expr(F); });
-  near(C['pi-perimeter'], 3.14016, 1e-5, 'perimeter ÷ 2h');           /* the text states 3.14159 */
+  near(C['pi-perimeter'], 3.14016, 1e-5, 'perimeter ÷ 2h');           /* the text states 3.14 */
+  assert.strictEqual(core.round(C['pi-perimeter'], 2), 3.14);
   near(C['cubit-pi6'], 0.523748, 1e-6, 'cubit in metres');             /* π/6 = 0.523599 */
   near(C['upper-ratio'], 2.0000, 1e-4, 'Upper Chamber 2:1');
   near(C['upper-pi'], 2.68756, 1e-4, 'Upper Chamber perimeter ÷ 2h');  /* the text states 3.14159 */

@@ -6,6 +6,15 @@ s = re.sub(r'<figure.*?</figure>', '', s, flags=re.S)
 s = re.sub(r'<img[^>]*>', '', s)
 s = re.sub(r'<p>\s*\[\]\s*</p>', '', s)
 s = re.sub(r'<p>\s*</p>', '', s)
+# Corrections made in the app's copy of the text (the manuscript keeps its own wording until revised).
+CORRECTIONS = [
+    ('equals 3.14159—π to five decimal places', 'equals 3.14—π to two decimal places'),
+    ('equals 3.14159—pi to five decimal places', 'equals 3.14—pi to two decimal places'),
+    ('yields pi (3.14159…)', 'yields pi (3.14)'),
+    ('(11,552 inches) = 3.14159.', '(11,552 inches) = 3.14.'),
+]
+for a, b in CORRECTIONS:
+    s = s.replace(a, b)
 parts = re.split(r'(<h1[^>]*>.*?</h1>)', s, flags=re.S)
 chap = []
 cur = None
