@@ -12,7 +12,7 @@
 
 The pieces are linked. A date in the book turns the clock, and a measurement opens its plate. Every discovery you add shows up in all of them.
 
-Open `index.html` in a browser. You need no install and no server. It is plain HTML, CSS and JavaScript, with no `.exe`.
+Open `index.html` in any browser on macOS, Linux or Windows. You need no install and no server. It is plain HTML, CSS and JavaScript, with no `.exe`.
 
 ---
 
@@ -74,12 +74,17 @@ discoveries/          one file per discovery, plus manifest.js
 tests/run.js          the test suite
 tools/serve.js        a local server (optional)
 tools/build-single.js bundles everything into dist/cosmic-chronicon.html
+tools/generators/     rebuilds data/book.js from the manuscript (with the corrections applied)
+tools/make-social-card.js  draws docs/social-preview.png, the image shown when the site is shared
 ```
 
 ## Running, testing, bundling
 
+Node 18 or later runs the tests and tools. On Windows, use WSL2.
+
+
 ```
-npm test              # 25 tests, no dependencies
+npm test              # 30 tests, no dependencies
 npm run serve         # http://127.0.0.1:8138/  (optional — index.html also opens straight from disk)
 npm run build         # dist/cosmic-chronicon.html — the whole instrument in one file
 ```

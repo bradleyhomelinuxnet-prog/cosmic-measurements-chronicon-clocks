@@ -165,5 +165,44 @@ test('every discovery section exists in the book', () => {
   P.features.filter(f => f.section).forEach(f => assert.ok(ids.has(f.section), f.id + ' → ' + f.section));
 });
 
+console.log('corrections and self-containment');
+const bookText = fs.readFileSync(path.join(root, 'data/book.js'), 'utf8');
+test('the book carries the corrected figures', () => {
+  ['five decimal places', '0.5236', '0.5235 meters', 'proportions encode pi', 'encode π when combined', 'Hollywood Rogue Ventures'].forEach(t =>
+    assert.ok(bookText.indexOf(t) < 0, 'still says: ' + t));
+  ['equals 3.14—π to two decimal places', '0.523 meters', 'approximately 11.16 cubits'].forEach(t =>
+    assert.ok(bookText.indexOf(t) >= 0, 'missing: ' + t));
+});
+test('pages load nothing from outside the repo', () => {
+  ['index.html', 'clock.html'].forEach(f => {
+    const html = fs.readFileSync(path.join(root, f), 'utf8');
+    const refs = [...html.matchAll(/<(?:script|link|img|iframe)[^>]+(?:src|href)="(https?:[^"]+)"/g)].map(m => m[1]);
+    assert.deepStrictEqual(refs, [], f + ' loads ' + refs.join(', '));
+  });
+});
+test('every local script and stylesheet the pages name exists', () => {
+  ['index.html', 'clock.html'].forEach(f => {
+    const html = fs.readFileSync(path.join(root, f), 'utf8');
+    [...html.matchAll(/<(?:script|link)[^>]+(?:src|href)="([^":#]+)"/g)].forEach(m =>
+      assert.ok(fs.existsSync(path.join(root, m[1])), f + ' → ' + m[1] + ' missing'));
+  });
+});
+test('a draft replaces the committed discovery with the same id', () => {
+  const sb = { window: {}, console, document: { write() { } } };
+  sb.self = sb.window; sb.window.CC = { core }; sb.CC = sb.window.CC;
+  sb.localStorage = { getItem: () => JSON.stringify([{ id: 'next-phoenix-2040ad', title: 'Edited', when: '2040 AD', kind: 'phoenix' }]), setItem() { } };
+  vm.createContext(sb);
+  vm.runInContext(fs.readFileSync(path.join(root, 'js/registry.js'), 'utf8'), sb);
+  vm.runInContext(fs.readFileSync(path.join(root, 'discoveries/next-phoenix-2040ad.js'), 'utf8'), sb);
+  const d = sb.CC.discoveries().filter(x => x.id === 'next-phoenix-2040ad');
+  assert.strictEqual(d.length, 1); assert.strictEqual(d[0].title, 'Edited'); assert.strictEqual(d[0].origin, 'draft');
+});
+test('the single-file build is self-contained', () => {
+  require('child_process').execFileSync(process.execPath, [path.join(root, 'tools/build-single.js')], { stdio: 'pipe' });
+  const out = fs.readFileSync(path.join(root, 'dist/cosmic-chronicon.html'), 'utf8');
+  assert.ok(!/<script src=\\?"[\w.\/-]+\.js|<link rel="stylesheet" href=|url\(\.\//.test(out), 'the bundle still points at outside files');
+  assert.ok(out.indexOf('CLOCK_SRCDOC') > 0 && out.indexOf('next-phoenix-2040ad') > 0);
+});
+
 console.log(`\n${pass} passed, ${fail} failed`);
 process.exit(fail ? 1 : 0);
