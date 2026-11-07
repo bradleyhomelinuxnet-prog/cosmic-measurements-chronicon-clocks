@@ -24,6 +24,7 @@ CORRECTIONS = [
     (' The height of 230.09 inches creates a room whose proportions encode π when combined with the perimeter.', ''),
     ('Upper Chamber proportions encode pi;', 'Upper Chamber proportions hold a 2:1 ratio;'),
     ('Height: 230.09 inches — encodes pi', 'Height: 230.09 inches — 11.16 cubits'),
+    ('© 2026 Bradley Rogue / Hollywood Rogue Ventures LLC', '© 2026 Bradley Rogue'),
 ]
 for a, b in CORRECTIONS:
     s = s.replace(a, b)
