@@ -1,5 +1,9 @@
 # Cosmic Chronicon
 
+[![tests](https://github.com/bradleyhomelinuxnet-prog/cosmic-measurements-chronicon-clocks/actions/workflows/test.yml/badge.svg)](https://github.com/bradleyhomelinuxnet-prog/cosmic-measurements-chronicon-clocks/actions/workflows/test.yml)
+
+**Live site:** https://bradleyhomelinuxnet-prog.github.io/cosmic-measurements-chronicon-clocks/
+
 **The Great Pyramid, measured and timed.** This is one offline browser instrument that joins three things:
 
 - the measurements of the Great Pyramid
@@ -92,7 +96,7 @@ npm run build         # dist/cosmic-chronicon.html — the whole instrument in o
 
 ## Sources and ownership
 
-- **Code, text, plates and design:** all © 2026 Bradley Rogue · Hollywood Rogue Ventures LLC. All rights reserved. The code was written by Bradley Rogue with an AI coding assistant.
+- **Code, text, plates and design:** all © 2026 Bradley Rogue · Hollywood Rogue Ventures LLC. All rights reserved (see [LICENSE](LICENSE)). The code was written by Bradley Rogue with an AI coding assistant.
 - **Measurements:** W. M. Flinders Petrie, *The Pyramids and Temples of Gizeh* (1883), public domain, as tabulated in *Cosmic Measurements*, Appendix A.
 - **Cycle framework:** the 138-year Phoenix, Nemesis X, the NER and the Annus Mundi count come from the Archaix thesis of Jason Breshears (Archaix.com; *Chronicon*, 2017). The framework is credited wherever it appears and is presented as a thesis, not as established archaeology. No charts, plates or passages of his are reproduced.
 - **Network use:** the app makes no network calls of its own. Fonts come from Google Fonts and fall back to system fonts offline. A film loads from YouTube only when you press play.
