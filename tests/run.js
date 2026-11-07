@@ -109,7 +109,8 @@ test('the checks compute the true values', () => {
   const C = {}; P.checks.forEach(c => { C[c.id] = c.expr(F); });
   near(C['pi-perimeter'], 3.14016, 1e-5, 'perimeter ÷ 2h');           /* the text states 3.14 */
   assert.strictEqual(core.round(C['pi-perimeter'], 2), 3.14);
-  near(C['cubit-pi6'], 0.523748, 1e-6, 'cubit in metres');             /* π/6 = 0.523599 */
+  near(C['cubit-pi6'], 0.523748, 1e-6, 'cubit in metres');             /* π/6 = 0.523599; both read 0.523 to three places */
+  assert.strictEqual(Math.trunc(C['cubit-pi6'] * 1000), 523); assert.strictEqual(Math.trunc(Math.PI / 6 * 1000), 523);
   near(C['upper-ratio'], 2.0000, 1e-4, 'Upper Chamber 2:1');
   near(C['upper-pi'], 2.68756, 1e-4, 'Upper Chamber perimeter ÷ 2h');  /* the text states 3.14159 */
   near(C['gallery-cubits'], 88.045, 1e-3, 'Gallery in cubits');

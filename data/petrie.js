@@ -33,10 +33,11 @@ CC.petrie = {
 
   /* Relationships the book draws. Each is recomputed live from the figures above;
      "claim" is what the text states, so the plate can show both side by side.
-     "places" judges a claim at the precision the text gives it: 3.14 holds if the result rounds to 3.14. */
+     "places" judges a claim at the precision the text gives it: 3.14 holds if the result rounds to 3.14;
+     with "truncate" the digits are cut, not rounded: 0.52375 and 0.52360 both read 0.523. */
   checks: [
     { id: 'pi-perimeter', name: 'Base perimeter ÷ twice the height', expr: function (f) { return 4 * f['base-mean'] / (2 * f['height-original']); }, target: Math.PI, targetLabel: 'π', claim: '3.14', places: 2, section: 'sxix' },
-    { id: 'cubit-pi6', name: 'Royal cubit in metres vs π ÷ 6', expr: function (f) { return f.cubit * 0.0254; }, target: Math.PI / 6, targetLabel: 'π/6', claim: '0.5236 m', section: 'the-precision-of-the-royal-cubit' },
+    { id: 'cubit-pi6', name: 'Royal cubit in metres vs π ÷ 6', expr: function (f) { return f.cubit * 0.0254; }, target: Math.PI / 6, targetLabel: 'π/6', claim: '0.523 m', places: 3, truncate: true, section: 'the-precision-of-the-royal-cubit' },
     { id: 'upper-ratio', name: 'Upper Chamber length ÷ width', expr: function (f) { return f['upper-length'] / f['upper-width']; }, target: 2, targetLabel: '2 : 1', claim: '2 : 1', section: 'svii' },
     { id: 'upper-width-cubits', name: 'Upper Chamber width in cubits', expr: function (f) { return f['upper-width'] / f.cubit; }, target: 10, targetLabel: '10', claim: '10 cubits', section: 'svii' },
     { id: 'upper-length-cubits', name: 'Upper Chamber length in cubits', expr: function (f) { return f['upper-length'] / f.cubit; }, target: 20, targetLabel: '20', claim: '20 cubits', section: 'svii' },

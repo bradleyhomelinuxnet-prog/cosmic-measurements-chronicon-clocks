@@ -12,6 +12,13 @@ CORRECTIONS = [
     ('equals 3.14159—pi to five decimal places', 'equals 3.14—pi to two decimal places'),
     ('yields pi (3.14159…)', 'yields pi (3.14)'),
     ('(11,552 inches) = 3.14159.', '(11,552 inches) = 3.14.'),
+    ('measured 0.5236 meters—exactly π/6', 'measured 0.523 meters—π/6 to three decimal places'),
+    ('measures exactly π/6 meters (0.5236 meters)', 'measures π/6 meters to three decimal places (0.523 meters)'),
+    ('a cubit of precisely 0.5235 meters', 'a cubit of 0.523 meters'),
+    ('The value 0.5235 meters approximates', 'The value 0.523 meters approximates'),
+    ('Divided by six: 0.5236—remarkably', 'Divided by six: 0.523…—remarkably'),
+    ('20.620 inches = 0.5236m = pi/6', '20.620 inches = 0.523m ≈ pi/6'),
+    ('20.620 inches = 0.5236m approximately equals pi/6', '20.620 inches = 0.523m approximately equals pi/6'),
 ]
 for a, b in CORRECTIONS:
     s = s.replace(a, b)
