@@ -61,6 +61,7 @@ To add a measurement, add a line to `data/petrie.js`. It appears in the converte
 ```
 index.html            the app shell
 clock.html            the Chronicon clock engine (reads its ledger from the discoveries)
+fonts/                the three typefaces, stored locally (SIL OFL)
 css/cc.css            the palette: the clock's gold-on-black, and Petrie's sepia plates
 js/core.js            year, cycle, palindrome and unit arithmetic (no DOM; runs under Node)
 js/registry.js        loads discoveries, keeps drafts, writes discovery files
@@ -99,4 +100,4 @@ npm run build         # dist/cosmic-chronicon.html — the whole instrument in o
 - **Code, text, plates and design:** all © 2026 Bradley Rogue. All rights reserved (see [LICENSE](LICENSE)). The code was written by Bradley Rogue with an AI coding assistant.
 - **Measurements:** W. M. Flinders Petrie, *The Pyramids and Temples of Gizeh* (1883), public domain, as tabulated in *Cosmic Measurements*, Appendix A.
 - **Cycle framework:** the 138-year Phoenix, Nemesis X, the NER and the Annus Mundi count come from the Archaix thesis of Jason Breshears (Archaix.com; *Chronicon*, 2017). The framework is credited wherever it appears and is presented as a thesis, not as established archaeology. No charts, plates or passages of his are reproduced.
-- **Network use:** the app makes no network calls of its own. Fonts come from Google Fonts and fall back to system fonts offline. A film loads from YouTube only when you press play.
+- **Network use:** none. The fonts (Cinzel, EB Garamond, IBM Plex Mono, SIL Open Font License) are stored in `fonts/`, and nothing is sent anywhere. The one exception is the Films tab: a film loads from YouTube only when you press play.

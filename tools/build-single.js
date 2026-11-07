@@ -12,7 +12,12 @@ const files = global.CC.discoveryFiles || [];
 const discoveries = files.map(f => safe(read('discoveries/' + f))).join('\n');
 
 function inline(html) {
-  html = html.replace(/<link rel="stylesheet" href="([^"]+)">/g, (m, href) => '<style>\n' + read(href) + '\n</style>');
+  html = html.replace(/<link rel="stylesheet" href="([^"]+)">/g, (m, href) => {
+    const dir = path.dirname(href);
+    const css = read(href).replace(/url\(\.\/([^)]+\.woff2)\)/g, (u, f) =>
+      'url(data:font/woff2;base64,' + fs.readFileSync(path.join(root, dir, f)).toString('base64') + ')');
+    return '<style>\n' + css + '\n</style>';
+  });
   html = html.replace('<script src="discoveries/manifest.js"></script>\n<script>CC.loadDiscoveries();</script>',
     '<script>\nCC.discoveryFiles = ' + JSON.stringify(files) + ';\n' + discoveries + '\n</script>');
   html = html.replace(/<script src="([^"]+)"><\/script>/g, (m, src) => '<script>\n' + safe(read(src)) + '\n</script>');

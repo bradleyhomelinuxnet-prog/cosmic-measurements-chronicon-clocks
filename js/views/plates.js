@@ -232,6 +232,52 @@
       '<a class="btn gold" href="#discoveries/new?feature=' + id + '">Add a discovery</a></div></div>';
   }
 
+  /* The measurement table: every figure, sortable by any column, each row opening its plate. */
+  var sortBy = { key: 'group', dir: 1 };
+  var COLS = [
+    ['name', 'Part'], ['group', 'Group'], ['figure', 'Figure'], ['in', 'Inches'], ['cubit', 'Cubits'], ['m', 'Metres'], ['ref', 'Source']
+  ];
+  function rowVals(f) {
+    var len = f.unit === 'in' || f.unit === 'ft';
+    return {
+      name: f.name, group: f.group, ref: f.ref,
+      figure: len ? core.convert(f.value, f.unit, 'in') : f.value,
+      in: len ? core.convert(f.value, f.unit, 'in') : null,
+      cubit: len ? core.convert(f.value, f.unit, 'cubit') : null,
+      m: len ? core.convert(f.value, f.unit, 'm') : null
+    };
+  }
+  function measuresTable() {
+    var rows = CC.petrie.features.slice().sort(function (a, b) {
+      var x = rowVals(a)[sortBy.key], y = rowVals(b)[sortBy.key];
+      if (x == null && y == null) return a.name.localeCompare(b.name);
+      if (x == null) return 1; if (y == null) return -1;
+      var c = typeof x === 'number' ? x - y : String(x).localeCompare(String(y));
+      return (c || a.name.localeCompare(b.name)) * sortBy.dir;
+    });
+    return '<div class="panel" style="margin-top:22px" id="mtable"><div class="kicker">Every measurement · click a heading to sort, a row to open its plate</div>' +
+      '<div class="table-scroll"><table class="checks sortable"><thead><tr>' + COLS.map(function (c) {
+        return '<th scope="col" data-k="' + c[0] + '"' + (sortBy.key === c[0] ? ' aria-sort="' + (sortBy.dir > 0 ? 'ascending' : 'descending') + '"' : '') + ' tabindex="0">' + c[1] + '</th>';
+      }).join('') + '</tr></thead><tbody>' + rows.map(function (f) {
+        var v = rowVals(f), unitLabel = { in: 'in', ft: 'ft', deg: '', count: '' }[f.unit];
+        return '<tr data-f="' + f.id + '" style="cursor:pointer"><td>' + A.esc(f.name) + (f.formerly ? '<div class="muted" style="font-size:13px;font-style:italic">formerly the ' + A.esc(f.formerly) + '</div>' : '') + '</td>' +
+          '<td>' + A.esc(f.group) + '</td><td class="num">' + (f.display || (n(f.value, 2) + (unitLabel ? ' ' + unitLabel : ''))) + (f.approx ? ' ≈' : '') + '</td>' +
+          '<td class="num">' + (v.in == null ? '—' : n(v.in, 2)) + '</td><td class="num">' + (v.cubit == null ? '—' : n(v.cubit, 2)) + '</td><td class="num">' + (v.m == null ? '—' : n(v.m, 3)) + '</td>' +
+          '<td class="muted" style="font-size:14px">' + A.esc(f.ref) + '</td></tr>';
+      }).join('') + '</tbody></table></div><p class="muted" style="font-size:14px;margin:10px 0 0">≈ marks figures the book gives as approximate. Add a row in <code>data/petrie.js</code>.</p></div>';
+  }
+  function wireMeasures(el) {
+    var box = el.querySelector('#mtable');
+    box.querySelectorAll('th[data-k]').forEach(function (th) {
+      function sort() { sortBy = { key: th.dataset.k, dir: sortBy.key === th.dataset.k ? -sortBy.dir : 1 }; box.outerHTML = measuresTable(); wireMeasures(el); }
+      th.addEventListener('click', sort);
+      th.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); sort(); } });
+    });
+    box.querySelectorAll('tr[data-f]').forEach(function (tr) {
+      tr.addEventListener('click', function () { A.go('#plates/' + tr.dataset.f + (PLATE_OF[tr.dataset.f] ? '?p=' + PLATE_OF[tr.dataset.f] : '')); });
+    });
+  }
+
   function checksTable() {
     var rows = CC.petrie.checks.map(function (c) {
       var v = c.expr(F), dev = (v - c.target) / c.target * 100, ad = Math.abs(dev);
@@ -257,7 +303,8 @@
       var plate = PLATES.find(function (p) { return p.id === pid; }), made = plate.make();
       el.appendChild(A.h('<div class="view-head"><h1>The Plates</h1><p>The monument in the manner of Petrie\'s 1883 survey plates. Every figure is drawn live from the measurement table.</p></div>' +
         '<div class="plate-tabs">' + PLATES.map(function (p) { return '<a class="btn' + (p.id === pid ? ' on' : '') + '" href="#plates' + (sel ? '/' + sel : '') + '?p=' + p.id + '">Plate ' + p.roman + ' · ' + p.name + '</a>'; }).join('') + '</div>' +
-        '<div class="plates"><div><div class="plate">' + made.svg + '<div class="cap"><span>PLATE ' + plate.roman + '</span><i>' + made.note + '</i></div></div></div><div id="fcard">' + card(sel) + '</div></div>' + checksTable()));
+        '<div class="plates"><div><div class="plate">' + made.svg + '<div class="cap"><span>PLATE ' + plate.roman + '</span><i>' + made.note + '</i></div></div></div><div id="fcard">' + card(sel) + '</div></div>' + measuresTable() + checksTable()));
+      wireMeasures(el);
       function pick(id) {
         el.querySelectorAll('.feat').forEach(function (g) { g.classList.toggle('sel', g.dataset.f === id); });
         el.querySelector('#fcard').innerHTML = card(id);

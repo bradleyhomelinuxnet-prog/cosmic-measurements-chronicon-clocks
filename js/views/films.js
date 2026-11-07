@@ -1,4 +1,4 @@
-/* View: Films — the channels and the films tied to the book. Nothing loads from YouTube until a film is played. */
+/* View: Films — the channels and the films tied to the book. Nothing, not even a thumbnail, loads from YouTube until a film is played. */
 (function () {
   'use strict';
   var CC = window.CC, A = CC.app, core = CC.core;
@@ -10,7 +10,7 @@
         '<div class="row" style="margin-bottom:18px">' + F.channels.map(function (c) { return '<a class="btn gold" href="' + A.esc(c.url) + '" target="_blank" rel="noopener">' + A.esc(c.name) + ' ↗</a>'; }).join('') + '</div>' +
         '<div class="films">' + F.list.map(function (f) {
           var sec = A.sectionById(f.section), yr = f.when != null ? core.parseYear(f.when) : null;
-          return '<div class="film"><button class="thumb" data-id="' + A.esc(f.id) + '" aria-label="Play ' + A.esc(f.title) + '" style="background-image:url(https://i.ytimg.com/vi/' + encodeURIComponent(f.id) + '/hqdefault.jpg)"></button>' +
+          return '<div class="film"><button class="thumb" data-id="' + A.esc(f.id) + '" aria-label="Play ' + A.esc(f.title) + '"><span class="poster">' + A.esc(f.title) + '<small>press play to load from YouTube</small></span></button>' +
             '<div class="body"><div class="kicker">' + A.esc(f.channel || '') + (f.published ? ' · ' + A.esc(f.published) : '') + '</div><h3>' + A.esc(f.title) + '</h3>' +
             (f.summary ? '<p class="muted" style="margin:4px 0 0;font-size:15px">' + A.esc(f.summary) + '</p>' : '') +
             '<div class="row" style="margin-top:10px">' + (sec ? '<a class="btn" href="#book/' + sec.id + '">' + A.esc(sec.label ? '§' + sec.label : sec.title) + '</a>' : '') +
