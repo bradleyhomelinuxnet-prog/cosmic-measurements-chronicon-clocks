@@ -129,7 +129,7 @@
     p.push(feat('upper-height', '<rect class="ink" x="' + x0 + '" y="' + ey + '" width="' + w + '" height="' + hh + '"/>' + dimV(x0 - 30, ey, ey + hh, n(H) + ' in · ' + n(H / F.cubit) + ' cubits', 'l') + '<rect class="hit" x="' + (x0 - 40) + '" y="' + ey + '" width="20" height="' + hh + '"/>'));
     p.push('<rect class="rock" x="' + (x0 - 14) + '" y="' + (ey + hh) + '" width="' + (w + 28) + '" height="16"/>');
     var ratio = L / Wd;
-    p.push('<text class="lbl" x="' + (x0 + w / 2) + '" y="' + (ey + hh + 48) + '" text-anchor="middle">length ÷ width = ' + n(ratio, 4) + '  ·  floor perimeter ÷ twice the height = ' + n(2 * (L + Wd) / (2 * H), 4) + '</text>');
+    p.push('<text class="lbl" x="' + (x0 + w / 2) + '" y="' + (ey + hh + 48) + '" text-anchor="middle">length ÷ width = ' + n(ratio, 4) + '</text>');
     p.push(scaleBar(x0, ey + hh + 96, s, 200));
     return { svg: '<svg viewBox="0 0 1000 ' + (ey + hh + 130) + '" role="img" aria-label="Plate II, the Upper Chamber in plan and elevation">' + p.join('') + '</svg>',
       note: 'Drawn to scale from Petrie §47. Dashed squares are royal cubits of 20.620 inches.' };

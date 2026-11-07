@@ -41,7 +41,6 @@ CC.petrie = {
     { id: 'upper-ratio', name: 'Upper Chamber length ÷ width', expr: function (f) { return f['upper-length'] / f['upper-width']; }, target: 2, targetLabel: '2 : 1', claim: '2 : 1', section: 'svii' },
     { id: 'upper-width-cubits', name: 'Upper Chamber width in cubits', expr: function (f) { return f['upper-width'] / f.cubit; }, target: 10, targetLabel: '10', claim: '10 cubits', section: 'svii' },
     { id: 'upper-length-cubits', name: 'Upper Chamber length in cubits', expr: function (f) { return f['upper-length'] / f.cubit; }, target: 20, targetLabel: '20', claim: '20 cubits', section: 'svii' },
-    { id: 'upper-pi', name: 'Upper Chamber floor perimeter ÷ twice the height', expr: function (f) { return 2 * (f['upper-length'] + f['upper-width']) / (2 * f['upper-height']); }, target: Math.PI, targetLabel: 'π', claim: '3.14159', section: 'svii' },
     { id: 'gallery-cubits', name: 'Grand Gallery length in cubits', expr: function (f) { return f['gallery-length'] / f.cubit; }, target: 88, targetLabel: '88', claim: '88 cubits', section: 'sviii' },
     { id: 'base-cubits', name: 'Mean base side in cubits', expr: function (f) { return f['base-mean'] / f.cubit; }, target: 440, targetLabel: '440', claim: '', section: 'si' },
     { id: 'height-cubits', name: 'Original height in cubits', expr: function (f) { return f['height-original'] / f.cubit; }, target: 280, targetLabel: '280', claim: '', section: 'si' },

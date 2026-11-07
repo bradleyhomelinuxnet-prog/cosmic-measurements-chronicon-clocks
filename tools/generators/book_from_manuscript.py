@@ -19,6 +19,7 @@ CORRECTIONS = [
     ('Divided by six: 0.5236—remarkably', 'Divided by six: 0.523…—remarkably'),
     ('20.620 inches = 0.5236m = pi/6', '20.620 inches = 0.523m ≈ pi/6'),
     ('20.620 inches = 0.5236m approximately equals pi/6', '20.620 inches = 0.523m approximately equals pi/6'),
+    (' The height of 230.09 inches creates proportions that encode pi: floor perimeter divided by twice the height yields 3.14159…', ''),
 ]
 for a, b in CORRECTIONS:
     s = s.replace(a, b)
