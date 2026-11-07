@@ -58,7 +58,11 @@
   function route() {
     var r = parse();
     var v = CC.views[r.view] ? r.view : 'clock';
-    document.querySelectorAll('#tabs a').forEach(function (a) { a.classList.toggle('on', a.dataset.v === v); });
+    document.querySelectorAll('#tabs a').forEach(function (a) {
+      var on = a.dataset.v === v; a.classList.toggle('on', on);
+      if (on) { a.setAttribute('aria-current', 'page'); if (a.scrollIntoView && innerWidth < 700) a.scrollIntoView({ inline: 'center', block: 'nearest' }); }
+      else a.removeAttribute('aria-current');
+    });
     var el = document.getElementById('view');
     if (current !== v || !CC.views[v].keep) {
       el.innerHTML = '';

@@ -10,6 +10,7 @@
 <link rel="stylesheet" href="css/cc.css">
 </head>
 <body>
+<button class="skip" type="button" onclick="var v=document.getElementById('view');v.focus();v.scrollIntoView()">Skip to content</button>
 <header class="mast">
   <div class="mast-in">
     <a class="brand" href="#clock">COSMIC CHRONICON<small>measured · timed · mirrored</small></a>
@@ -28,7 +29,7 @@
   </nav>
 </header>
 
-<main id="view"></main>
+<main id="view" tabindex="-1"></main>
 
 <footer class="colophon">
   <span>© 2026 Bradley Rogue</span>

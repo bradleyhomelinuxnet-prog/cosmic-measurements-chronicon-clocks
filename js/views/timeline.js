@@ -9,33 +9,50 @@
     var ds = CC.discoveries().filter(function (d) { return d.astro != null; });
     var min = Math.min.apply(null, ds.map(function (d) { return d.astro; }).concat([-4000])) - 150;
     var max = Math.max.apply(null, ds.map(function (d) { return d.astro; }).concat([2200])) + 100;
-    var W = 1800, L = 40, R = W - 40, mid = 260, H = 520;
+    var W = 1800, L = 60, R = W - 60, GAP = 30, FONT = 15;
     function X(a) { return L + (a - min) / (max - min) * (R - L); }
+    /* place every label in the first free lane, above or below the line, so none overlap */
+    var lanes = { up: [], down: [] }, placed = [];
+    ds.forEach(function (d, i) {
+      var x = X(d.astro), t = d.title.length > 30 ? d.title.slice(0, 29) + '…' : d.title;
+      var w = t.length * FONT * 0.47, l = Math.max(4, x - w / 2), r = Math.min(W - 4, x + w / 2);
+      function free(side) {
+        for (var k = 0; k < 12; k++) {
+          var row = lanes[side][k] || (lanes[side][k] = []);
+          if (row.every(function (iv) { return r + 12 < iv[0] || l - 12 > iv[1]; })) return k;
+        }
+        return 11;
+      }
+      var pref = i % 2 ? ['down', 'up'] : ['up', 'down'], a = free(pref[0]), b = free(pref[1]);
+      var side = a <= b ? pref[0] : pref[1], lane = Math.min(a, b);
+      lanes[side][lane].push([l, r]);
+      placed.push({ d: d, x: x, t: t, side: side, lane: lane, anchor: x - w / 2 < 4 ? 'start' : x + w / 2 > W - 4 ? 'end' : 'middle' });
+    });
+    var nUp = placed.reduce(function (m, q) { return q.side === 'up' ? Math.max(m, q.lane + 1) : m; }, 1);
+    var nDown = placed.reduce(function (m, q) { return q.side === 'down' ? Math.max(m, q.lane + 1) : m; }, 1);
+    var mid = 70 + nUp * GAP, H = mid + 60 + nDown * GAP + 20;
     var p = [];
     if (state.grid) {
-      for (var g = core.cyclePosition(min, 'phoenix').next; g <= max; g += 138) p.push('<line class="tl-grid" x1="' + X(g) + '" y1="40" x2="' + X(g) + '" y2="' + (H - 40) + '"/>');
+      for (var g = core.cyclePosition(min, 'phoenix').next; g <= max; g += 138) p.push('<line class="tl-grid" x1="' + X(g) + '" y1="30" x2="' + X(g) + '" y2="' + (H - 20) + '"/>');
     }
     p.push('<line class="tl-axis" x1="' + L + '" y1="' + mid + '" x2="' + R + '" y2="' + mid + '" stroke-width="1.5"/>');
     var step = (max - min) > 4000 ? 500 : 250;
     for (var t = Math.ceil(min / step) * step; t <= max; t += step) {
-      p.push('<g class="tl-tick"><line class="tl-axis" x1="' + X(t) + '" y1="' + (mid - 5) + '" x2="' + X(t) + '" y2="' + (mid + 5) + '"/><text x="' + X(t) + '" y="' + (mid + 22) + '" text-anchor="middle">' + core.fmtYear(t) + '</text><text x="' + X(t) + '" y="' + (mid + 36) + '" text-anchor="middle" opacity=".6">AM ' + core.am(t) + '</text></g>');
+      p.push('<g class="tl-tick"><line class="tl-axis" x1="' + X(t) + '" y1="' + (mid - 5) + '" x2="' + X(t) + '" y2="' + (mid + 5) + '"/><text x="' + X(t) + '" y="' + (mid + 24) + '" text-anchor="middle">' + core.fmtYear(t) + '</text><text x="' + X(t) + '" y="' + (mid + 39) + '" text-anchor="middle" opacity=".6">AM ' + core.am(t) + '</text></g>');
     }
     var now = new Date().getFullYear();
-    p.push('<line x1="' + X(now) + '" y1="60" x2="' + X(now) + '" y2="' + (H - 60) + '" stroke="#e8c770" stroke-width="1"/><text x="' + (X(now) + 4) + '" y="70" fill="#e8c770" style="font:11px IBM Plex Mono,monospace">TODAY</text>');
+    p.push('<line x1="' + X(now) + '" y1="30" x2="' + X(now) + '" y2="' + (H - 20) + '" stroke="#e8c770" stroke-width="1" stroke-opacity=".7"/><text x="' + (X(now) - 4) + '" y="24" text-anchor="end" fill="#e8c770" style="font:12px IBM Plex Mono,monospace">TODAY</text>');
     var color = { key: '#e8c770', phoenix: '#d0573f', nemesis: '#9a7fd1', measurement: '#5fb8c2', cycle: '#8fb36a', ner: '#c9a54a', maya: '#5fb8c2', note: '#938c77' };
-    var lanes = [[], [], [], [], []];
-    ds.forEach(function (d, i) {
-      var x = X(d.astro), above = i % 2 === 0, lane = 0;
-      var row = lanes.map(function (l, k) { return k; }).find(function (k) { return lanes[k].every(function (o) { return Math.abs(o.x - x) > 120 || o.above !== above; }); });
-      lane = row == null ? i % 5 : row; lanes[lane].push({ x: x, above: above });
-      var ly = above ? mid - 30 - lane * 34 : mid + 56 + lane * 34;
-      p.push('<g class="tl-dot" data-id="' + A.esc(d.id) + '" tabindex="0" role="button"><line x1="' + x + '" y1="' + mid + '" x2="' + x + '" y2="' + (above ? ly + 4 : ly - 14) + '" stroke="' + color[d.kind] + '" stroke-opacity=".5"/>' +
-        '<circle cx="' + x + '" cy="' + mid + '" r="' + (d.kind === 'phoenix' ? 6 : 5) + '" fill="' + color[d.kind] + '"' + (d.origin === 'draft' ? ' stroke="#fff" stroke-dasharray="2 2"' : '') + '/>' +
-        '<text x="' + x + '" y="' + ly + '" text-anchor="middle">' + A.esc(d.title.length > 28 ? d.title.slice(0, 27) + '…' : d.title) + '</text></g>');
+    placed.forEach(function (q) {
+      var d = q.d, ly = q.side === 'up' ? mid - 22 - q.lane * GAP : mid + 66 + q.lane * GAP;
+      p.push('<g class="tl-dot" data-id="' + A.esc(d.id) + '" tabindex="0" role="button" aria-label="' + A.esc(d.title + ', ' + core.fmtYear(d.astro)) + '">' +
+        '<line x1="' + q.x + '" y1="' + mid + '" x2="' + q.x + '" y2="' + (q.side === 'up' ? ly + 5 : ly - 15) + '" stroke="' + color[d.kind] + '" stroke-opacity=".45"/>' +
+        '<circle cx="' + q.x + '" cy="' + mid + '" r="' + (d.kind === 'phoenix' ? 6 : 5) + '" fill="' + color[d.kind] + '"' + (d.origin === 'draft' ? ' stroke="#fff" stroke-dasharray="2 2"' : '') + '/>' +
+        '<text x="' + q.x + '" y="' + ly + '" text-anchor="' + q.anchor + '" style="font-size:' + FONT + 'px">' + A.esc(q.t) + '</text></g>');
     });
     if (state.mirror) {
       var axis = core.astroFromAM(state.axisAM);
-      p.push('<line class="tl-axisline" x1="' + X(axis) + '" y1="40" x2="' + X(axis) + '" y2="' + (H - 40) + '"/><text x="' + (X(axis) + 5) + '" y="52" fill="#c9a54a" style="font:11px IBM Plex Mono,monospace">AXIS · AM ' + state.axisAM + '</text>');
+      p.push('<line class="tl-axisline" x1="' + X(axis) + '" y1="30" x2="' + X(axis) + '" y2="' + (H - 20) + '"/><text x="' + (X(axis) + 5) + '" y="24" fill="#c9a54a" style="font:12px IBM Plex Mono,monospace">AXIS · AM ' + state.axisAM + '</text>');
       ds.forEach(function (d) {
         var m = core.mirror(d.astro, axis);
         if (m < min || m > max) return;

@@ -65,7 +65,8 @@
       }
       var ds = CC.discoveries().filter(function (d) { return d.section === c.id; });
       var arcName = (ARCS.find(function (a) { return a[0] === c.arc; }) || ['', ''])[1];
-      el.appendChild(A.h('<div class="book"><nav class="toc" aria-label="Contents">' + tocHTML(c.id) + '</nav>' +
+      var wide = !window.matchMedia || window.matchMedia('(min-width: 901px)').matches;
+      el.appendChild(A.h('<div class="book"><details class="tocbox"' + (wide ? ' open' : '') + '><summary>Contents · ' + A.esc(c.label ? '§' + c.label + ' ' : '') + A.esc(c.title) + '</summary><nav class="toc" aria-label="Contents">' + tocHTML(c.id) + '</nav></details>' +
         '<article class="reader"><div class="arc">' + A.esc(arcName) + '</div><h2>' + (c.label ? c.label + ' · ' : '') + A.esc(c.title) + '</h2>' + mirror +
         '<div id="btext">' + c.html + '</div>' +
         (ds.length ? '<div class="panel" style="margin-top:26px"><div class="kicker">Discoveries tied to this section</div>' + ds.map(function (d) { return '<div style="margin-top:6px"><a href="#discoveries/' + A.esc(d.id) + '">' + A.esc(d.title) + '</a>' + (d.astro != null ? ' <span class="muted mono" style="font-size:12px">' + A.yearLabel(d.astro) + '</span>' : '') + '</div>'; }).join('') + '</div>' : '') +
@@ -73,7 +74,7 @@
         '<div class="pager">' + (prev ? '<a class="btn" href="#book/' + prev.id + '">← ' + A.esc(prev.label || prev.title.slice(0, 30)) + '</a>' : '<span></span>') + (next ? '<a class="btn" href="#book/' + next.id + '">' + A.esc(next.label || next.title.slice(0, 30)) + ' →</a>' : '') + '</div></article></div>'));
       linkify(el.querySelector('#btext'), r.q.hl);
       el.querySelectorAll('a.yr').forEach(function (a) { a.href = '#clock?y=' + a.dataset.y; });
-      var on = el.querySelector('.toc a.on'); if (on && on.scrollIntoView) on.scrollIntoView({ block: 'nearest' });
+      var on = el.querySelector('.toc a.on'); if (on && wide) { var tc = el.querySelector('.toc'); tc.scrollTop = on.offsetTop - tc.clientHeight / 3; }
       if (r.q.hl) setTimeout(function () { var m = el.querySelector('mark'); if (m) m.scrollIntoView({ block: 'center' }); }, 60);
     }
   };
