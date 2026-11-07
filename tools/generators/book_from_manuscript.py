@@ -20,6 +20,10 @@ CORRECTIONS = [
     ('20.620 inches = 0.5236m = pi/6', '20.620 inches = 0.523m ≈ pi/6'),
     ('20.620 inches = 0.5236m approximately equals pi/6', '20.620 inches = 0.523m approximately equals pi/6'),
     (' The height of 230.09 inches creates proportions that encode pi: floor perimeter divided by twice the height yields 3.14159…', ''),
+    ('approximately 11.18 cubits—dimensions that encode pi when ratios are calculated.', 'approximately 11.16 cubits.'),
+    (' The height of 230.09 inches creates a room whose proportions encode π when combined with the perimeter.', ''),
+    ('Upper Chamber proportions encode pi;', 'Upper Chamber proportions hold a 2:1 ratio;'),
+    ('Height: 230.09 inches — encodes pi', 'Height: 230.09 inches — 11.16 cubits'),
 ]
 for a, b in CORRECTIONS:
     s = s.replace(a, b)
