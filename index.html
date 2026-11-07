@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cosmic Chronicon</title>
+<meta name="description" content="The Great Pyramid, measured and timed: Petrie's survey, the Chronicon clocks and the Cosmic Measurements book in one offline instrument.">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/cc.css">
+</head>
+<body>
+<header class="mast">
+  <div class="mast-in">
+    <a class="brand" href="#clock">COSMIC CHRONICON<small>measured · timed · mirrored</small></a>
+    <span class="now" id="nowLine"></span>
+  </div>
+  <nav class="tabs" id="tabs" aria-label="Sections">
+    <a href="#clock" data-v="clock">Clock</a>
+    <a href="#plates" data-v="plates">Plates</a>
+    <a href="#timeline" data-v="timeline">Timeline</a>
+    <a href="#discoveries" data-v="discoveries">Discoveries</a>
+    <a href="#book" data-v="book">The Book</a>
+    <a href="#index" data-v="index">19 · 138</a>
+    <a href="#convert" data-v="convert">Converter</a>
+    <a href="#films" data-v="films">Films</a>
+    <a href="#about" data-v="about">About</a>
+  </nav>
+</header>
+
+<main id="view"></main>
+
+<footer class="colophon">
+  <span>© 2026 Bradley Rogue · Hollywood Rogue Ventures LLC</span>
+  <span>Measurements: W. M. F. Petrie, 1883 · Cycle framework: J. Breshears, Archaix · Runs offline</span>
+</footer>
+
+<!-- core, registry, then every discovery file named in the manifest -->
+<script src="js/core.js"></script>
+<script src="js/registry.js"></script>
+<script src="discoveries/manifest.js"></script>
+<script>CC.loadDiscoveries();</script>
+<!-- data -->
+<script src="data/petrie.js"></script>
+<script src="data/films.js"></script>
+<script src="data/book.js"></script>
+<!-- app -->
+<script src="js/app.js"></script>
+<script src="js/views/clock.js"></script>
+<script src="js/views/plates.js"></script>
+<script src="js/views/timeline.js"></script>
+<script src="js/views/discoveries.js"></script>
+<script src="js/views/book.js"></script>
+<script src="js/views/index19.js"></script>
+<script src="js/views/convert.js"></script>
+<script src="js/views/films.js"></script>
+<script src="js/views/about.js"></script>
+<script>CC.app.start();</script>
+</body>
+</html>

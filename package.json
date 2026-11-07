@@ -1,0 +1,13 @@
+{
+  "name": "cosmic-chronicon",
+  "version": "1.0.0",
+  "private": true,
+  "description": "The Great Pyramid, measured and timed: Petrie's survey, the Chronicon clocks and the Cosmic Measurements book in one offline browser instrument.",
+  "scripts": {
+    "test": "node tests/run.js",
+    "serve": "node tools/serve.js",
+    "build": "node tools/build-single.js"
+  },
+  "author": "Bradley Rogue",
+  "license": "UNLICENSED"
+}
